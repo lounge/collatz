@@ -12,43 +12,60 @@ window.onload = function() {
 function visualize(branches) {
 
   var canvasHeight = document.getElementById('canvas').height;
+  var canvasWidth = document.getElementById('canvas').width;
+  var xPosStart = canvasWidth / 6;
+console.log(canvasWidth);
+console.log(xPosStart);
+
 
   var path = new paper.Path();
-  path.strokeColor = 'green';
-  path.add(new paper.Point(400, canvasHeight));
-  path.add(new paper.Point(400, canvasHeight - 50));
+  path.strokeColor = '#3C896D';
+  path.add(new paper.Point(xPosStart, canvasHeight));
+  path.add(new paper.Point(xPosStart, canvasHeight - 800));
   path.smooth();
 
-  var xPos = 400;
-  var yPos = canvasHeight - 50;
+  var yPosTickHeight = 20;
+  var xPos = xPosStart;
+  var yPos = canvasHeight - 800;
 
   for (var i = 0; i < branches.length; i++) {
     var path = new paper.Path();
-    path.strokeColor = 'red';
+    path.strokeColor = '#3C896D';
     path.add(new paper.Point(xPos, yPos));
-    path.add(new paper.Point(xPos, yPos - 50));
+    path.add(new paper.Point(xPos, yPos - yPosTickHeight));
     path.smooth();
-    console.log('branch', xPos, yPos);
+    // console.log('branch', xPos, yPos);
+
+
+
 
      var subBranch = branches[i];
-     var branchXPos = xPos;
+     var branchXPositionNeg = xPos;
+     var branchXPositionPos = xPos;
     for(var y = 0; y < subBranch.length; y++) {
+      var path = new paper.Path();
+      path.add(new paper.Point(xPos, yPos));
+
       branch = subBranch[y];
       if (branch % 2 === 0) {
-        branchXPos += 20;
+        branchXPositionPos += 3;
+        path.add(new paper.Point(branchXPositionPos, yPos - yPosTickHeight));
+        // console.log('pos');
+        path.strokeColor = '#4FB286';
       } else {
-        branchXPos -= 20;
+        branchXPositionNeg -= 3;
+        path.add(new paper.Point(branchXPositionNeg, yPos - yPosTickHeight));
+        // console.log('neg');
+        path.strokeColor = '#50FFB1';
       }
 
-      var path = new paper.Path();
-      path.strokeColor = 'blue';
-      path.add(new paper.Point(xPos, yPos));
-      path.add(new paper.Point(branchXPos, yPos - 50));
+
+
       path.smooth();
-      console.log('sub', branchXPos, yPos);
+      // console.log('sub', branchXPos, yPos);
     }
 
-    yPos -= 50;
+    yPos -= yPosTickHeight;
 
   }
 

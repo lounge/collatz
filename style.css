@@ -3,7 +3,7 @@ body {
     margin: 0;
     overflow: hidden;
     height: 100%;
-    background: #000;
+    background: #0B132B;
 }
 
 canvas[resize] {
