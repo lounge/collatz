@@ -26,7 +26,7 @@ window.onload = function() {
     for (var i = 0; i < branchPaths.length; i++) {
   		var branch = branchPaths[i];
   		var sinus = Math.sin(event.time * 3 + i);
-  		branch.segments[0].point.x = branch.segments[0].point.x + (sinus * 60);
+  		branch.segments[1].point.x = branch.segments[1].point.x + (sinus * 60);
   	}
     branch.smooth();
   }
