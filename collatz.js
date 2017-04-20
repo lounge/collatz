@@ -1,23 +1,39 @@
+var stemPath;
+var branchPaths = [];
+var canvasHeight;
+var canvasWidth;
+var xPosStart;
+
 window.onload = function() {
   var canvas = document.getElementById('canvas');
   paper.setup(canvas);
 
-  var branches = reverseCollatz(27);
-  console.log(branches);
+  canvasHeight = document.getElementById('canvas').height;
+  canvasWidth = document.getElementById('canvas').width;
+  xPosStart = canvasWidth / 6;
 
+  var branches = reverseCollatz(27);
   visualize(branches);
+
+  paper.view.onFrame = function(event) {
+  	for (var i = 0; i < stemPath.segments.length; i++) {
+  		var segment = stemPath.segments[i];
+  		var sinus = Math.sin(event.time * 3 + i);
+  		segment.point.x = xPosStart + (sinus * 60);
+  	}
+  	stemPath.smooth();
+
+    for (var i = 0; i < branchPaths.length; i++) {
+  		var branch = branchPaths[i];
+  		var sinus = Math.sin(event.time * 3 + i);
+  		branch.segments[0].point.x = branch.segments[0].point.x + (sinus * 60);
+  	}
+    branch.smooth();
+  }
 }
 
 
 function visualize(branches) {
-
-  var canvasHeight = document.getElementById('canvas').height;
-  var canvasWidth = document.getElementById('canvas').width;
-  var xPosStart = canvasWidth / 6;
-console.log(canvasWidth);
-console.log(xPosStart);
-
-
   var path = new paper.Path();
   path.strokeColor = '#3C896D';
   path.add(new paper.Point(xPosStart, canvasHeight));
@@ -28,48 +44,41 @@ console.log(xPosStart);
   var xPos = xPosStart;
   var yPos = canvasHeight - 800;
 
+  stemPath = new paper.Path();
+  stemPath.strokeColor = 'red';//'#3C896D';
   for (var i = 0; i < branches.length; i++) {
-    var path = new paper.Path();
-    path.strokeColor = '#3C896D';
-    path.add(new paper.Point(xPos, yPos));
-    path.add(new paper.Point(xPos, yPos - yPosTickHeight));
-    path.smooth();
-    // console.log('branch', xPos, yPos);
 
 
-
+    stemPath.add(new paper.Point(xPos, yPos));
+    stemPath.add(new paper.Point(xPos, yPos - yPosTickHeight));
+    stemPath.smooth();
 
      var subBranch = branches[i];
      var branchXPositionNeg = xPos;
      var branchXPositionPos = xPos;
     for(var y = 0; y < subBranch.length; y++) {
-      var path = new paper.Path();
-      path.add(new paper.Point(xPos, yPos));
+      var branchPath = new paper.Path();
+      branchPath.add(new paper.Point(xPos, yPos));
 
       branch = subBranch[y];
       if (branch % 2 === 0) {
         branchXPositionPos += 3;
-        path.add(new paper.Point(branchXPositionPos, yPos - yPosTickHeight));
-        // console.log('pos');
-        path.strokeColor = '#4FB286';
+        branchPath.add(new paper.Point(branchXPositionPos, yPos - yPosTickHeight));
+        branchPath.strokeColor = '#4FB286';
       } else {
         branchXPositionNeg -= 3;
-        path.add(new paper.Point(branchXPositionNeg, yPos - yPosTickHeight));
-        // console.log('neg');
-        path.strokeColor = '#50FFB1';
+        branchPath.add(new paper.Point(branchXPositionNeg, yPos - yPosTickHeight));
+        branchPath.strokeColor = '#50FFB1';
       }
 
-
-
-      path.smooth();
-      // console.log('sub', branchXPos, yPos);
+      branchPath.smooth();
+      branchPaths.push(branchPath);
     }
-
     yPos -= yPosTickHeight;
-
   }
 
   paper.view.draw();
+  console.log('stem length: ' + stemPath.segments.length);
 }
 
 function reverseCollatz(max) {
