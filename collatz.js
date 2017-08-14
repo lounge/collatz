@@ -18,15 +18,16 @@ window.onload = function() {
   paper.view.onFrame = function(event) {
   	for (var i = 0; i < stemPath.segments.length; i++) {
   		var segment = stemPath.segments[i];
-  		var sinus = Math.sin(event.time * 3 + i);
-  		segment.point.x = xPosStart + (sinus * 60);
+  		var sinus = Math.cos(event.time * 10 + i);
+  		segment.point.x = xPosStart + (sinus * 8);
+        // console.log('stem length: ' + stemPath.segments.length);
   	}
   	stemPath.smooth();
 
     for (var i = 0; i < branchPaths.length; i++) {
   		var branch = branchPaths[i];
   		var sinus = Math.sin(event.time * 3 + i);
-  		branch.segments[1].point.x = branch.segments[1].point.x + (sinus * 60);
+  		branch.segments[1].point.x = branch.segments[1].point.x + (sinus * 8);
   	}
     branch.smooth();
   }
@@ -40,12 +41,12 @@ function visualize(branches) {
   path.add(new paper.Point(xPosStart, canvasHeight - 800));
   path.smooth();
 
-  var yPosTickHeight = 20;
+  var yPosTickHeight = 25;
   var xPos = xPosStart;
   var yPos = canvasHeight - 800;
 
   stemPath = new paper.Path();
-  stemPath.strokeColor = 'red';//'#3C896D';
+  stemPath.strokeColor = '#'+Math.floor(Math.random()*16777215).toString(16);//'red';//'#3C896D';
   for (var i = 0; i < branches.length; i++) {
 
 
@@ -64,11 +65,11 @@ function visualize(branches) {
       if (branch % 2 === 0) {
         branchXPositionPos += 3;
         branchPath.add(new paper.Point(branchXPositionPos, yPos - yPosTickHeight));
-        branchPath.strokeColor = '#4FB286';
+        branchPath.strokeColor = '#'+Math.floor(Math.random()*16777215).toString(16);//'#4FB286';
       } else {
         branchXPositionNeg -= 3;
         branchPath.add(new paper.Point(branchXPositionNeg, yPos - yPosTickHeight));
-        branchPath.strokeColor = '#50FFB1';
+        branchPath.strokeColor = '#'+Math.floor(Math.random()*16777215).toString(16);//'#50FFB1';
       }
 
       branchPath.smooth();
